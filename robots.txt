@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vitorhugobar3840-tech.github.io/no-save/sitemap.xml
