@@ -33,6 +33,6 @@ Nenhuma foto foi gerada por IA e nenhuma foto é de outro produto.
 
 ## Endereço provisório (quando o Pages for ativado)
 
-https://vitorhugobar3840-tech.github.io/no-save/
+https://nosavestreet.github.io/no-save-/
 
 O domínio nosave.com.br fica para a fase nacional (Fase D) — bloqueado por idade hoje.
