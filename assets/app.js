@@ -20,8 +20,9 @@
     try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch (e) { return []; }
   }
   function saveCart(cart) {
-    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
+    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) { return false; }
     updateCartBadge();
+    return true;
   }
   function cartCount() {
     return loadCart().reduce(function (n, it) { return n + it.qty; }, 0);
@@ -53,7 +54,7 @@
     } else {
       cart.push({ key: key, slug: slug, color: color, size: size, qty: qty, img: img || '' });
     }
-    saveCart(cart);
+    if (!saveCart(cart)) { toast('Não foi possível salvar o carrinho neste aparelho.'); return false; }
     return true;
   }
   function setQty(key, qty) {
@@ -215,6 +216,12 @@
       need('#numero', function (v) { return v.length >= 1; });
       need('#bairro', function (v) { return v.length >= 2; });
       need('#cidade', function (v) { return v.length >= 2; });
+      need('#uf', function (v) { return v.length === 2; });
+      var payInput = $('input[name="pagamento"]');
+      var payField = payInput ? payInput.closest('.field') : null;
+      var payOk = !!$('input[name="pagamento"]:checked');
+      if (payField) payField.classList.toggle('error', !payOk);
+      if (!payOk) { ok = false; if (!firstBad) firstBad = payField; }
       var terms = $('#aceite');
       var termsField = terms.closest('.field');
       termsField.classList.toggle('error', !terms.checked);
@@ -258,9 +265,11 @@
       return { name: p.name, color: it.color, size: it.size, qty: it.qty, priceCents: p.priceCents };
     });
     var g = function (id) { var el = $(id); return el ? el.value.trim() : ''; };
+    var payEl = document.querySelector('input[name="pagamento"]:checked');
     return {
       ref: ref,
       items: items,
+      payment: payEl ? payEl.value : '',
       subtotalCents: cartSubtotal(),
       delivery: 'Entrega local em Boa Esperança – MG',
       name: g('#nome'), phone: g('#telefone'),
@@ -289,6 +298,7 @@
       'Pedido: ' + order.ref + '\n\n' +
       lines.join('\n') + '\n\n' +
       'Subtotal: ' + money(order.subtotalCents) + '\n' +
+      (order.payment ? 'Pagamento: ' + order.payment + '\n' : '') +
       'Entrega: ' + order.delivery + ' (a combinar)\n' +
       '---\n' +
       'Nome: ' + order.name + '\n' +
@@ -303,7 +313,7 @@
       '<h3>Pedido ' + esc(order.ref) + '</h3>' + itemsHtml +
       '<div class="row"><span>Subtotal</span><strong>' + money(order.subtotalCents) + '</strong></div>' +
       '<div class="row"><span>Entrega</span><strong>' + esc(order.delivery) + ' — sem taxa por enquanto</strong></div>' +
-      '<div class="row"><span>Pagamento</span><strong>Pix ou dinheiro (confirmação manual)</strong></div>' +
+      '<div class="row"><span>Pagamento</span><strong>' + esc(order.payment || 'Pix ou dinheiro') + ' (confirmação manual)</strong></div>' +
       '<p class="note" style="margin-top:14px">Anote a referência do pedido: ela identifica a sua mensagem.</p>' +
       '<h3 style="margin-top:22px">Mensagem do pedido</h3>' +
       '<pre id="order-msg">' + esc(msg) + '</pre>' +
@@ -348,12 +358,59 @@
     });
   }
 
+  /* ---------- voltar ---------- */
+  function initBackLink() {
+    var path = window.location.pathname || '';
+    if (/(^|\/)index\.html$/.test(path) || path === '/' || path.slice(-1) === '/') return;
+    var main = document.querySelector('main');
+    if (!main) return;
+    var dest = 'index.html';
+    if (document.querySelector('[data-product]')) dest = 'produtos.html';
+    else if (document.querySelector('#cart-box')) dest = 'produtos.html';
+    else if (document.querySelector('#checkout-form')) dest = 'carrinho.html';
+    else if (document.querySelector('#order-box')) dest = 'produtos.html';
+    var a = document.createElement('a');
+    a.href = dest;
+    a.className = 'back-link';
+    a.textContent = '← Voltar';
+    main.insertBefore(a, main.firstChild);
+  }
+
+  /* ---------- movimento ---------- */
+  function initMotion() {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hint = $('.scroll-hint');
+    if (hint) {
+      window.addEventListener('scroll', function () {
+        hint.classList.toggle('hidden', window.scrollY > 40);
+      }, { passive: true });
+    }
+    if (reduce || !('IntersectionObserver' in window)) return;
+    $all('.grid').forEach(function (grid) {
+      $all('.card', grid).forEach(function (card, i) { card.style.transitionDelay = (i * 60) + 'ms'; });
+    });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('visible');
+        io.unobserve(en.target);
+        setTimeout(function () { en.target.style.transitionDelay = '0ms'; }, 500);
+      });
+    }, { threshold: 0.15 });
+    $all('.grid .card, section h2, section .lead, .product .photo, .product .info, .text-page > *, .order-box, .summary').forEach(function (el) {
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     updateCartBadge();
+    initBackLink();
     initProductPage();
     initCartPage();
     initCheckout();
     initOrderPage();
     initGuide();
+    initMotion();
   });
 })();

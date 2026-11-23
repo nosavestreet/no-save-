@@ -67,10 +67,11 @@
 <div class="field"><label for="observacoes">Observações (opcional)</label>
 <textarea id="observacoes" name="observacoes" rows="3" placeholder="Alguma observação sobre o pedido?"></textarea></div>
 <div class="field"><label>Pagamento</label>
-<div class="pay-opt"><span>Pix</span><span class="tag">Confirmação manual</span></div>
-<div class="pay-opt"><span>Dinheiro</span><span class="tag">Confirmação manual</span></div>
+<div class="pay-opt"><label class="pay-choice"><input type="radio" name="pagamento" value="Pix"> Pix</label><span class="tag">Confirmação manual</span></div>
+<div class="pay-opt"><label class="pay-choice"><input type="radio" name="pagamento" value="Dinheiro"> Dinheiro</label><span class="tag">Confirmação manual</span></div>
 <div class="pay-opt disabled"><span>Cartão de crédito</span><span class="tag">Desabilitado no momento</span></div>
 <div class="pay-opt disabled"><span>Cartão de débito</span><span class="tag">Desabilitado no momento</span></div>
+<p class="errmsg">Escolha Pix ou dinheiro.</p>
 <p class="hint">O pagamento é combinado no WhatsApp depois da confirmação do pedido. A chave Pix nunca aparece no site.</p></div>
 <div class="field"><label class="check"><input id="aceite" type="checkbox"> Li e aceito os <a href="termos.html">termos da compra</a> e a <a href="privacidade.html">política de privacidade</a>. Sei que meus dados são usados só para este pedido e apagados 90 dias depois da entrega.</label>
 <p class="errmsg">Você precisa aceitar os termos para continuar.</p></div>
@@ -88,7 +89,7 @@ Compra local, direto com a gente, pelo WhatsApp.</p>
 <div>
 <h4>Pedidos</h4>
 <ul>
-<li><a href="produtos.html">Pedidos pelo WhatsApp — finalize sua compra aqui e envie o pedido no final.</a></li>
+<li><a href="produtos.html">Como pedir — veja os produtos e monte seu pedido</a></li>
 <li><a href="carrinho.html">Carrinho</a></li>
 <li><a href="sobre.html">Como acompanho meu pedido?</a></li>
 </ul>

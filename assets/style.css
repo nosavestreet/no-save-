@@ -99,6 +99,8 @@ form.checkout{max-width:640px}
 .pay-opt{border:2px solid var(--black);padding:14px 16px;margin-bottom:10px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
 .pay-opt.disabled{opacity:.45}
 .pay-opt .tag{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.pay-opt label.pay-choice{font-size:16px;text-transform:none;letter-spacing:0;display:flex;align-items:center;gap:8px;margin-bottom:0}
+.pay-opt input{width:auto;accent-color:#000}
 /* order page */
 .order-box{border:2px solid var(--black);padding:24px;margin:20px 0}
 .order-box h3{font-size:20px;font-weight:900;text-transform:uppercase;margin-bottom:12px}
@@ -132,5 +134,32 @@ footer.site a{color:var(--white)}
 footer.site p,footer.site li{font-size:15px;line-height:1.7}
 footer.site ul{list-style:none}
 footer.site .bottom{border-top:1px solid #333;margin-top:28px;padding-top:16px;font-size:13px;color:#999;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+/* voltar */
+.back-link{display:inline-block;margin:20px 0 0;font-weight:800;font-size:15px;text-decoration:none;border-bottom:2px solid var(--black)}
+/* mobile: o cabeçalho quebra em duas linhas em vez de estourar a largura; a tabela do carrinho rola na horizontal */
+#cart-box{overflow-x:auto}
+@media(max-width:720px){
+  header.site .wrap{flex-wrap:wrap;height:auto;row-gap:10px;padding-top:10px;padding-bottom:10px}
+  nav.main{order:3;flex-basis:100%;margin-left:0;gap:14px;overflow-x:auto}
+  .cart-link{margin-left:auto}
+}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--black);color:var(--white);padding:12px 20px;font-weight:700;font-size:14px;z-index:200;display:none}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* movimento: entrada do hero, revelação ao rolar, hover dos cartões */
+@keyframes heroIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hintPulse{0%,100%{opacity:.55;transform:translateY(0)}50%{opacity:1;transform:translateY(6px)}}
+.hero h1 span{animation:heroIn .6s ease both}
+.hero h1 span:nth-child(2){animation-delay:.09s}
+.hero h1 span:nth-child(3){animation-delay:.18s}
+.hero .aux{animation:heroIn .6s ease .26s both}
+.hero .hero-photo{animation:heroIn .6s ease .34s both}
+.hero .cta{animation:heroIn .6s ease .42s both}
+.scroll-hint{display:inline-flex;align-items:center;gap:8px;margin-top:26px;color:#bbb;font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;animation:hintPulse 1.8s ease-in-out infinite}
+.scroll-hint span{font-size:16px}
+.scroll-hint.hidden{opacity:0!important;pointer-events:none;animation:none}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .4s ease,transform .4s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.card{transition:transform .35s ease,box-shadow .35s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.card:hover .photo img{transform:scale(1.05)}
+.card:active{transform:scale(.985)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
