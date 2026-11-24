@@ -309,17 +309,22 @@
     var itemsHtml = order.items.map(function (it) {
       return '<div class="row"><span>' + it.qty + 'x ' + esc(it.name) + ' — ' + esc(it.color) + ' / ' + esc(it.size) + '</span><strong>' + money(it.priceCents * it.qty) + '</strong></div>';
     }).join('');
+    var waText = encodeURIComponent(msg);
     box.innerHTML =
       '<h3>Pedido ' + esc(order.ref) + '</h3>' + itemsHtml +
       '<div class="row"><span>Subtotal</span><strong>' + money(order.subtotalCents) + '</strong></div>' +
       '<div class="row"><span>Entrega</span><strong>' + esc(order.delivery) + ' — sem taxa por enquanto</strong></div>' +
       '<div class="row"><span>Pagamento</span><strong>' + esc(order.payment || 'Pix ou dinheiro') + ' (confirmação manual)</strong></div>' +
       '<p class="note" style="margin-top:14px">Anote a referência do pedido: ela identifica a sua mensagem.</p>' +
+      '<h3 style="margin-top:22px">Enviar no WhatsApp</h3>' +
+      '<p>Escolha um dos números — a mensagem do pedido já vai pronta, é só enviar:</p>' +
+      '<a class="btn block" style="margin-bottom:10px" href="https://wa.me/5535997350313?text=' + waText + '" target="_blank" rel="noopener">Enviar no WhatsApp do Vitor — (35) 99735-0313</a>' +
+      '<a class="btn block ghost" href="https://wa.me/5535987014078?text=' + waText + '" target="_blank" rel="noopener">Enviar no WhatsApp do Rafael — (35) 98701-4078</a>' +
       '<h3 style="margin-top:22px">Mensagem do pedido</h3>' +
       '<pre id="order-msg">' + esc(msg) + '</pre>' +
       '<button type="button" class="btn block" id="copy-msg">Copiar mensagem do pedido</button>' +
       '<div class="alert warn"><strong>Enviar a mensagem não confirma o pedido.</strong> O pedido só é confirmado quando o Vitor ou o Rafael responder no WhatsApp.</div>' +
-      '<div class="alert info"><strong>Envio pelo WhatsApp — em configuração.</strong> A finalização pelo WhatsApp desta vitrine ainda não está liberada: os números não podem ser publicados. Copie a mensagem acima e guarde a referência ' + esc(order.ref) + '. Assim que a finalização for liberada, você envia a mensagem e a loja confirma o pedido. Dúvidas: Instagram @nosavestreet.</div>';
+      '<p class="note">Envie em até 30 minutos — depois disso o pedido pode expirar e a peça voltar para a loja. O pagamento tem até 24 horas depois da confirmação.</p>';
     var copyBtn = $('#copy-msg');
     copyBtn.addEventListener('click', function () {
       var done = function () { toast('Mensagem copiada.'); };
